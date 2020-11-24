@@ -17,25 +17,33 @@ request(URL, function (err, res, body) {
     let pageText = dom.window.document.querySelector('#arrticle').innerHTML;
     let pageTitle = dom.window.document.querySelector('.h4').innerHTML;
 
-    fs.writeFileSync("body.html", body);
     fs.writeFileSync("dom.html", pageText);
     
     console.log(res.statusCode);
     rwTitle(pageTitle);
-    // rwText();
+    rwText();
 });
 
 function rwTitle(pageTitle) {
     pageTitle = pageTitle.replace(/\<span(.*)/gims, '');
-    console.log('pageTitle: ', pageTitle);
+    fs.appendFileSync('dataReplaced.html', `\n${pageTitle}\n`, 'utf-8');
 }
 
 // Регулярки можно записывать подряд к одному файлу
 function rwText () {
     let data = fs.readFileSync('dom.html', 'utf-8');
-    data = data.replace(/\&nbsp\;/gi, ' ');
-    data = data.replace(/\<br\>\<br\>/gi, '\n');
-    data = data.replace(/\<div(.*)\/div\>/gims, ' ');
-    fs.writeFileSync('dataReplaced.html', data, 'utf-8');
+    // Убираем неразрывные пробелы
+    data = data.replace(/\&nbsp\;/gi, ' '); 
+    // Двойной перенос строки
+    data = data.replace(/<br><br>/gi, '\n');
+    // Непонятный див со скриптом
+    data = data.replace(/<div(.*)\/div>/gims, ' ');
+    fs.appendFileSync('dataReplaced.html', data, 'utf-8');
+    clearSrc();
     console.log('complete');
+}
+
+// Удаляем излишки
+function clearSrc() {
+    fs.unlinkSync("dom.html");
 }
