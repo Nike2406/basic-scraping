@@ -13,12 +13,10 @@ const {
 
 let url = 'https://ranobes.com/chapters/against-the-gods/102105-glava-1227-gorenie-krovi-feniksa.html';
 
-for (let i = 0; i < 10; i++) {
-    console.log('url1: ', url);
+for (let i = 0; i < 3; i++) { // Обработка?
     getText();
-    console.log('url2: ', url);
     // setTimeout(nextPush(), 3000);
-    console.log('url3: ', url);
+    console.log('url: ', url);
 }
 
 function getText() {
@@ -31,17 +29,17 @@ function getText() {
         let pageText = dom.window.document.querySelector('#arrticle').innerHTML;
         let pageTitle = dom.window.document.querySelector('.h4').innerHTML;
         
-        let nextPage = dom.window.document.querySelector('#next');
+        url = dom.window.document.querySelector('#next').href;
         // console.log('nextPage: ', nextPage);
         // console.log('nextPage: ', nextPage.href);
-        url = nextPage.href;
-
+        // url = nextPage.href;
+        console.log('nextPage: ', url);
         fs.writeFileSync("dom.html", pageText);
 
         console.log(res.statusCode);
         rwTitle(pageTitle);
         rwText();
-         return url;
+        return url; // !!!Вопрос видимости
     });
 
     function rwTitle(pageTitle) {
